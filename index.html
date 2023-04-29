@@ -18,14 +18,14 @@
     <script>
       let canvas;
       let rectColor = "black";
-      let playerNameInput, submitNameBtn, startGameBtn;
+      let playerNameInput, mcNameInput, submitNameBtn, submitMcBtn, startGameBtn;
 
       let villagerCheckbox = [];
       let prophetCheckbox, witchCheckbox, hunterCheckbox, guardCheckbox, cupidCheckbox;
       let wolfCheckbox = [];
       let wolfKingCheckbox, whiteWolfCheckbox;
 
-      let playerList = [];
+      let playerList = ['Gary', 'Vincent', 'Fei', 'Iris', 'Tony', 'Hersper', 'Zoe', 'Hason', 'Erin', 'Jeffrey', 'Eric', 'Jing', 'Marin', 'Yiu'];
       let gameState = 0;
 
       function setup() {
@@ -41,6 +41,13 @@
         submitNameBtn = createButton('Add');
         submitNameBtn.position(playerNameInput.x + playerNameInput.width + 10, playerNameInput.y);
         submitNameBtn.mousePressed(addPlayer);
+
+        mcNameInput = createInput();
+        mcNameInput.position(width / 2 - mcNameInput.width/2, height * 2/20);
+
+        submitMcBtn = createButton('Add');
+        submitMcBtn.position(mcNameInput.x + mcNameInput.width + 10, mcNameInput.y);
+        submitMcBtn.mousePressed(removePlayer);
 
         startGameBtn = createButton('開始');
         startGameBtn.position(width / 2 - startGameBtn.width/2, height * 19/20);
@@ -91,15 +98,24 @@
       function draw() {
         background("skyblue");
 
+        textAlign(LEFT)
         text('game state: ' + gameState, 10, 10)
         text('player list: ' + playerList, 10, 20)
 
         if (gameState == 0) {
+            textAlign(RIGHT)
+            text('Player: ', playerNameInput.x, playerNameInput.y + playerNameInput.height/2)
+            text('MC: ', mcNameInput.x, mcNameInput.y + mcNameInput.height/2)
+
+            // print the player list
             for (i = 0; i < playerList.length; i++) {
-                text(playerList[i], width / 2, playerNameInput.y + playerNameInput.height*1.2 + (i+1)*15);
+                textAlign(CENTER)
+                text(playerList[i], width / 2, mcNameInput.y + mcNameInput.height*1.2 + (i+1)*15);
             }
-            text('遊玩人數： ' + playerList.length, width / 2, playerNameInput.height*1.2 + (playerList.length+1)*15+50);
-            startGameBtn.position(width / 2 - startGameBtn.width/2, playerNameInput.height*1.2 + (playerList.length+1)*15+100);
+            text('遊玩人數： ' + playerList.length, width / 2, mcNameInput.height*1.2 + (playerList.length+1)*15+70);
+
+            // print the start game button
+            startGameBtn.position(width / 2 - startGameBtn.width/2, mcNameInput.height*1.2 + (playerList.length+1)*15+100);
             startGameBtn.mousePressed(startGame)
         } else if (gameState == 1) {
         }
@@ -141,6 +157,12 @@
             playerList.push(playerName);
             playerNameInput.value('');
         }
+      }
+
+      function removePlayer() {
+        let mcName = mcNameInput.value();
+        playerList.pop(mcName)
+        mcNameInput.value('');
       }
 
       function drawRect() {
