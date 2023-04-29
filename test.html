@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Player List</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #00bfff; /* sky blue */
+      }
+      
+      #player-input {
+        width: 80%;
+        height: 40px;
+        margin: 20px auto;
+        display: block;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      
+      #add-btn {
+        height: 40px;
+        margin-left: 10px;
+        display: inline-block;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        background-color: #00bfff; /* sky blue */
+        color: white;
+        cursor: pointer;
+      }
+      
+      #player-list-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - 80px);
+      }
+      
+      #player-list {
+        width: 80%;
+        margin: 20px auto 0;
+        padding: 0;
+        list-style: none;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <input type="text" id="player-input" placeholder="Enter player name">
+      <button id="add-btn">Add</button>
+    </div>
+    <div id="player-list-container">
+      <ul id="player-list"></ul>
+    </div>
+
+    <script>
+      var playerList = document.getElementById("player-list");
+      var playerInput = document.getElementById("player-input");
+      var addBtn = document.getElementById("add-btn");
+
+      addBtn.addEventListener("click", function() {
+        var playerName = playerInput.value.trim();
+        if (playerName !== "") {
+          var playerItem = document.createElement("li");
+          playerItem.innerText = playerName;
+          playerList.appendChild(playerItem);
+          playerInput.value = "";
+        }
+      });
+    </script>
+  </body>
+</html>
