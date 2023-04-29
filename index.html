@@ -21,8 +21,9 @@
       let playerNameInput, submitNameBtn, startGameBtn;
 
       let villagerCheckbox = [];
+      let prophetCheckbox, witchCheckbox, hunterCheckbox, guardCheckbox, cupidCheckbox;
       let wolfCheckbox = [];
-      let godCheckbox = [];
+      let wolfKingCheckbox, whiteWolfCheckbox;
 
       let playerList = [];
       let gameState = 0;
@@ -47,9 +48,44 @@
         // input for preparation page
         // gameState = 1
         for (i = 0; i < 10; i++) {
-            villagerCheckbox = createCheckbox('廢村', false);
-            villagerCheckbox.position(i*50, height / 2);
+            villagerCheckbox[i] = createCheckbox('廢村', false);
+            villagerCheckbox[i].position(30, (i+1) * 30);
+            villagerCheckbox[i].hide();
         }
+
+        prophetCheckbox = createCheckbox('預言家', false);
+        prophetCheckbox.position(100, 30);
+        prophetCheckbox.hide();
+
+        witchCheckbox = createCheckbox('女巫', false);
+        witchCheckbox.position(100, 60);
+        witchCheckbox.hide();
+
+        hunterCheckbox = createCheckbox('獵人', false);
+        hunterCheckbox.position(100, 90);
+        hunterCheckbox.hide();
+
+        guardCheckbox = createCheckbox('守衛', false);
+        guardCheckbox.position(100, 120);
+        guardCheckbox.hide();
+
+        cupidCheckbox = createCheckbox('邱比特', false);
+        cupidCheckbox.position(100, 150);
+        cupidCheckbox.hide();
+
+        for (i = 0; i < 10; i++) {
+            wolfCheckbox[i] = createCheckbox('狼人', false);
+            wolfCheckbox[i].position(200, (i+1) * 30);
+            wolfCheckbox[i].hide();
+        }
+
+        wolfKingCheckbox = createCheckbox('狼王', false);
+        wolfKingCheckbox.position(270, 30);
+        wolfKingCheckbox.hide();
+
+        whiteWolfCheckbox = createCheckbox('白狼', false);
+        whiteWolfCheckbox.position(270, 60);
+        whiteWolfCheckbox.hide();
       }
 
       function draw() {
@@ -79,6 +115,24 @@
         playerNameInput.remove();
         submitNameBtn.remove();
         startGameBtn.remove();
+
+        for (i = 0; i < villagerCheckbox.length; i++) {
+            villagerCheckbox[i].show();
+        }
+
+        prophetCheckbox.show();
+        witchCheckbox.show();
+        hunterCheckbox.show();
+        guardCheckbox.show();
+        cupidCheckbox.show();
+
+        for (i = 0; i < wolfCheckbox.length; i++) {
+            wolfCheckbox[i].show();
+        }
+
+        wolfKingCheckbox.show();
+        whiteWolfCheckbox.show();
+
       }
 
       function addPlayer() {
