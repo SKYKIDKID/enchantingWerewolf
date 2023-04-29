@@ -20,10 +20,15 @@
       let rectColor = "black";
       let playerNameInput, mcNameInput, submitNameBtn, submitMcBtn, startGameBtn;
 
+
+      const godNameList = ['預言家', '女巫', '獵人', '守衛', '邱比特'];
       let villagerCheckbox = [];
-      let prophetCheckbox, witchCheckbox, hunterCheckbox, guardCheckbox, cupidCheckbox;
+      let godCheckbox = [];
       let wolfCheckbox = [];
       let wolfKingCheckbox, whiteWolfCheckbox;
+      let villagerList = [];
+      let godList = [];
+      let wolfList = [];
 
       let playerList = ['Gary', 'Vincent', 'Fei', 'Iris', 'Tony', 'Hersper', 'Zoe', 'Hason', 'Erin', 'Jeffrey', 'Eric', 'Jing', 'Marin', 'Yiu'];
       let gameState = 0;
@@ -58,27 +63,15 @@
             villagerCheckbox[i] = createCheckbox('廢村', false);
             villagerCheckbox[i].position(30, (i+1) * 30);
             villagerCheckbox[i].hide();
+            villagerCheckbox[i].changed(villagerCheckboxEvent)
         }
 
-        prophetCheckbox = createCheckbox('預言家', false);
-        prophetCheckbox.position(100, 30);
-        prophetCheckbox.hide();
+        for (i = 0; i < godNameList.length; i++) {
+            godCheckbox[i] = createCheckbox(godNameList[i], false);
+            godCheckbox[i].position(100, (i+1) * 30);
+            godCheckbox[i].hide();
+        }
 
-        witchCheckbox = createCheckbox('女巫', false);
-        witchCheckbox.position(100, 60);
-        witchCheckbox.hide();
-
-        hunterCheckbox = createCheckbox('獵人', false);
-        hunterCheckbox.position(100, 90);
-        hunterCheckbox.hide();
-
-        guardCheckbox = createCheckbox('守衛', false);
-        guardCheckbox.position(100, 120);
-        guardCheckbox.hide();
-
-        cupidCheckbox = createCheckbox('邱比特', false);
-        cupidCheckbox.position(100, 150);
-        cupidCheckbox.hide();
 
         for (i = 0; i < 10; i++) {
             wolfCheckbox[i] = createCheckbox('狼人', false);
@@ -99,10 +92,15 @@
         background("skyblue");
 
         textAlign(LEFT)
-        text('game state: ' + gameState, 10, 10)
-        text('player list: ' + playerList, 10, 20)
+        tempHeight = 400
+        text('game state: ' + gameState, 10, 10 + tempHeight)
+        text('player list: ' + playerList, 10, 20 + tempHeight)
+        text('villager list: ' + villagerList, 10, 30 + tempHeight)
+        text('God list: ' + godList, 10, 40 + tempHeight)
+        text('wolf list: ' + wolfList, 10, 50 + tempHeight)
 
         if (gameState == 0) {
+            // Label for player and mc input
             textAlign(RIGHT)
             text('Player: ', playerNameInput.x, playerNameInput.y + playerNameInput.height/2)
             text('MC: ', mcNameInput.x, mcNameInput.y + mcNameInput.height/2)
@@ -118,6 +116,20 @@
             startGameBtn.position(width / 2 - startGameBtn.width/2, mcNameInput.height*1.2 + (playerList.length+1)*15+100);
             startGameBtn.mousePressed(startGame)
         } else if (gameState == 1) {
+            // check the selection
+            godCheckboxEvent();
+            wolfCheckboxEvent();
+
+            // print the result
+            textAlign(LEFT)
+            text('廢村： ' + villagerList.length, 30, (villagerCheckbox.length+1) * 30 + 20);
+            text('神職： ' + godList.length, 100, (villagerCheckbox.length+1) * 30 + 20);
+            text('狼人： ' + wolfList.length, 200, (villagerCheckbox.length+1) * 30 + 20);
+
+            textAlign(CENTER)
+            let numberOfSelection = villagerList.length + godList.length + wolfList.length
+            text('遊玩人數： ' + playerList.length + '   選取人數： ' + numberOfSelection, width / 2, (villagerCheckbox.length+1) * 30 + 50);
+
         }
       }
 
@@ -130,17 +142,17 @@
 
         playerNameInput.remove();
         submitNameBtn.remove();
+        mcNameInput.remove();
+        submitMcBtn.remove();
         startGameBtn.remove();
 
         for (i = 0; i < villagerCheckbox.length; i++) {
             villagerCheckbox[i].show();
         }
 
-        prophetCheckbox.show();
-        witchCheckbox.show();
-        hunterCheckbox.show();
-        guardCheckbox.show();
-        cupidCheckbox.show();
+        for (i = 0; i < godCheckbox.length; i++) {
+            godCheckbox[i].show();
+        }
 
         for (i = 0; i < wolfCheckbox.length; i++) {
             wolfCheckbox[i].show();
@@ -161,8 +173,45 @@
 
       function removePlayer() {
         let mcName = mcNameInput.value();
-        playerList.pop(mcName)
+        playerList.pop(mcName);
         mcNameInput.value('');
+      }
+
+      function villagerCheckboxEvent() {
+        villagerList = []
+        for (i = 0; i < villagerCheckbox.length; i++) {
+            if (villagerCheckbox[i].checked()) {
+                villagerList.push('廢村');
+            } 
+        }      
+      }
+
+      function godCheckboxEvent() {
+        godList = [];
+
+        for (i = 0; i < godCheckbox.length; i++) {
+            if (godCheckbox[i].checked()) {
+                godList.push(godNameList[i]);
+            } 
+        }    
+      }
+
+      function wolfCheckboxEvent() {
+        wolfList = [];
+
+        for (i = 0; i < wolfCheckbox.length; i++) {
+            if (wolfCheckbox[i].checked()) {
+                wolfList.push('狼人');
+            } 
+        }
+        
+        if (wolfKingCheckbox.checked()) {
+            wolfList.push('狼王');
+        } 
+
+        if (whiteWolfCheckbox.checked()) {
+            wolfList.push('白狼');
+        } 
       }
 
       function drawRect() {
