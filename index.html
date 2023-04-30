@@ -16,6 +16,14 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <script>
+        class Player {
+            constructor(name, duty, status) {
+                this.name = name;
+                this.duty = duty;
+                this.status = status;
+            }
+        }
+      
       let canvas;
       let rectColor = "black";
       let playerNameInput, mcNameInput, submitNameBtn, submitMcBtn, startGameBtn;
@@ -29,6 +37,9 @@
       let villagerList = [];
       let godList = [];
       let wolfList = [];
+      let nightBtn, dayBtn;
+
+      let gameRound = 0;
 
       let playerList = ['Gary', 'Vincent', 'Fei', 'Iris', 'Tony', 'Hersper', 'Zoe', 'Hason', 'Erin', 'Jeffrey', 'Eric', 'Jing', 'Marin', 'Yiu'];
       let gameState = 0;
@@ -63,7 +74,6 @@
             villagerCheckbox[i] = createCheckbox('廢村', false);
             villagerCheckbox[i].position(30, (i+1) * 30);
             villagerCheckbox[i].hide();
-            villagerCheckbox[i].changed(villagerCheckboxEvent)
         }
 
         for (i = 0; i < godNameList.length; i++) {
@@ -86,6 +96,11 @@
         whiteWolfCheckbox = createCheckbox('白狼', false);
         whiteWolfCheckbox.position(270, 60);
         whiteWolfCheckbox.hide();
+
+        nightBtn = createButton('天黑請閉眼');
+        nightBtn.position(width / 2 - startGameBtn.width/2, height * 19/20);
+        nightBtn.hide()
+        nightBtn.mousePressed(nightCheck);
       }
 
       function draw() {
@@ -99,7 +114,10 @@
         text('God list: ' + godList, 10, 40 + tempHeight)
         text('wolf list: ' + wolfList, 10, 50 + tempHeight)
 
+
+        // The main game loop
         if (gameState == 0) {
+            //Landing page
             // Label for player and mc input
             textAlign(RIGHT)
             text('Player: ', playerNameInput.x, playerNameInput.y + playerNameInput.height/2)
@@ -116,9 +134,9 @@
             startGameBtn.position(width / 2 - startGameBtn.width/2, mcNameInput.height*1.2 + (playerList.length+1)*15+100);
             startGameBtn.mousePressed(startGame)
         } else if (gameState == 1) {
+            // Preparation page
             // check the selection
-            godCheckboxEvent();
-            wolfCheckboxEvent();
+            CheckboxEvent();
 
             // print the result
             textAlign(LEFT)
@@ -129,6 +147,7 @@
             textAlign(CENTER)
             let numberOfSelection = villagerList.length + godList.length + wolfList.length
             text('遊玩人數： ' + playerList.length + '   選取人數： ' + numberOfSelection, width / 2, (villagerCheckbox.length+1) * 30 + 50);
+        } else if (gameState == 2) {
 
         }
       }
@@ -138,7 +157,7 @@
       }
 
       function startGame() {
-        gameState = 1;
+        gameState += 1;
 
         playerNameInput.remove();
         submitNameBtn.remove();
@@ -160,6 +179,7 @@
 
         wolfKingCheckbox.show();
         whiteWolfCheckbox.show();
+        nightBtn.show();
 
       }
 
@@ -173,20 +193,23 @@
 
       function removePlayer() {
         let mcName = mcNameInput.value();
-        playerList.pop(mcName);
-        mcNameInput.value('');
+
+        for (i = 0; i < playerList.length; i++) {
+            if (mcName == playerList[i]) {
+                playerList.splice(i, 1);
+                mcNameInput.value('');
+            }
+        }
       }
 
-      function villagerCheckboxEvent() {
+      function CheckboxEvent() {
         villagerList = []
         for (i = 0; i < villagerCheckbox.length; i++) {
             if (villagerCheckbox[i].checked()) {
                 villagerList.push('廢村');
             } 
         }      
-      }
-
-      function godCheckboxEvent() {
+  
         godList = [];
 
         for (i = 0; i < godCheckbox.length; i++) {
@@ -194,9 +217,7 @@
                 godList.push(godNameList[i]);
             } 
         }    
-      }
 
-      function wolfCheckboxEvent() {
         wolfList = [];
 
         for (i = 0; i < wolfCheckbox.length; i++) {
@@ -214,8 +235,32 @@
         } 
       }
 
-      function drawRect() {
-        rect(width/2, height/2, 50, 50);
+      function nightCheck() {
+        if (gameState == 1) {
+            let numberOfSelection = villagerList.length + godList.length + wolfList.length
+            if (playerList.length == numberOfSelection) {
+                // Go into the first night
+                gameState += 1;
+                gameRound += 1;
+
+                // kill the chekerboxes
+                for (i = 0; i < villagerCheckbox.length; i++) {
+                    villagerCheckbox[i].remove();
+                }
+
+                for (i = 0; i < godCheckbox.length; i++) {
+                    godCheckbox[i].remove();
+                }
+
+                for (i = 0; i < wolfCheckbox.length; i++) {
+                    wolfCheckbox[i].remove();
+                }
+
+                wolfKingCheckbox.remove();
+                whiteWolfCheckbox.remove();
+                nightBtn.remove();
+            }
+        }
       }
     </script>
   </head>
